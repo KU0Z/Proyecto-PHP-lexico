@@ -5,6 +5,18 @@
  */
 package miniphp;
 
+import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author keviu
@@ -14,7 +26,9 @@ public class LexicalForm extends javax.swing.JFrame {
     /**
      * Creates new form LexicalForm
      */
+    String ruta="";
     public LexicalForm() {
+        
         initComponents();
     }
 
@@ -27,21 +41,152 @@ public class LexicalForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TASalida = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        TAConsola = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TALeido = new javax.swing.JTextArea();
+        BTBuscar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        TASalida.setColumns(20);
+        TASalida.setRows(5);
+        jScrollPane1.setViewportView(TASalida);
+
+        TAConsola.setColumns(20);
+        TAConsola.setRows(5);
+        jScrollPane3.setViewportView(TAConsola);
+
+        TALeido.setColumns(20);
+        TALeido.setRows(5);
+        jScrollPane2.setViewportView(TALeido);
+
+        BTBuscar.setText("Buscar Archivo");
+        BTBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTBuscarActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(65, 65, 65)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(BTBuscar)
+                        .addGap(162, 162, 162)
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BTBuscar)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public String ObtenerRuta(Component a)
+    {
+     String nuevaRuta = "";
+     JFileChooser dialog = new JFileChooser();
+     FileNameExtensionFilter filtro = new FileNameExtensionFilter("PHP", "php");
+     File archivo;
+     dialog.setFileFilter(filtro);
+     if(dialog.showOpenDialog(a) == JFileChooser.APPROVE_OPTION)
+     {
+        archivo = dialog.getSelectedFile();
+        nuevaRuta = archivo.getPath();
+     }
+     return nuevaRuta;
+    }
+    public void LeerArchivo() throws FileNotFoundException, IOException
+    {
+        ruta=ObtenerRuta(this);
+        FileReader fr=new FileReader(ruta);
+        BufferedReader br = new BufferedReader(fr);
+        String currentLine = br.readLine();
+        String tmpString = "";
+        while(currentLine != null){
+            tmpString = tmpString + currentLine+"\n";
+            currentLine = br.readLine();
+            
+        }
+        TALeido.append(tmpString); 
+    }
+        public void Correr() throws IOException{
+        int contIDs=0;
+        Reader reader = new BufferedReader(new FileReader(ruta));
+        Lexer lexer = new Lexer (reader);
+        String consola="";
+        String salida="";
+        while (true){
+            Token token =lexer.yylex();
+            if(token == null){
+                salida = salida+"EOF";
+                
+                break;
+            }
+            else{
+                salida += lexer.lexeme;
+                consola+=token+"'\n";
+
+           
+            }
+            
+    }
+        TASalida.append(salida);
+        TAConsola.append(consola);
+ }
+    private void BTBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTBuscarActionPerformed
+        try {
+            // TODO add your handling code here:
+            LeerArchivo();
+        } catch (IOException ex) {
+            Logger.getLogger(LexicalForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_BTBuscarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            // TODO add your handling code here:
+            Correr();
+        } catch (IOException ex) {
+            Logger.getLogger(LexicalForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +224,13 @@ public class LexicalForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BTBuscar;
+    private javax.swing.JTextArea TAConsola;
+    private javax.swing.JTextArea TALeido;
+    private javax.swing.JTextArea TASalida;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }
