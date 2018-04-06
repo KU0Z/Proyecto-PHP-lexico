@@ -35,7 +35,7 @@ palabras_reservadas=(("_")("_"){h}{a}{l}{t}("_"){c}{o}{m}{p}{i}{l}{e}{r}|{a}{b}{
 Operadore_aritmeticos = "+"|"-"|"*"|"/"|"**"|"%"
 Operadore_comparacion = "=="|"!="|">"|"<"|"<="|"=>"
 Operadore_logicos = "&&"|"and"|"or"|"xor"|"||"|"!"|"&"
-Operadore_adicionales = "="|"+="|"-="|"*="|"/="|"%="|".="|"."|"?"|":"|"&="|"|="|"^="|"<<="|">>="|"\|"|"^"|"<<"|">>"|"@"|"$"|"#"|"_"|"\\"|" "|"¿"|"¡"|"\""|"\'"
+Operadore_adicionales = "="|"+="|"-="|"*="|"/="|"%="|".="|"."|"?"|":"|"&="|"|="|"^="|"<<="|">>="|"\|"|"^"|"<<"|">>"|"@"|"#"|"_"|"\\"|" "|"¿"|"¡"|"\""|"\'"
 Aberturas = "("|"{"|"["
 cierre = ")"|"}"|"]"
 puntocomma = ";"
@@ -57,9 +57,11 @@ variable_global = "$"({g}{l}{o}{b}{a}{l}{s}|"_"({s}{e}{r}{v}{e}{r}|{g}{e}{t}|{p}
 varialbe_goblalm= "$"({p}{h}{p}"_"{e}{r}{r}{o}{r}{m}{s}{g}|{h}{t}{t}{p}"_"{r}{e}{s}{p}{o}{n}{s}{e}"_"{h}{e}{a}{d}{e}{r}|{a}{r}{g}{c}|{a}{r}{g}{v})
 function = function
 comentario_liea = ("//"|"#")(.)*
-comentario_multi = (("/*")([^(("*/"))])*("*/"))
+comentario_multi = (("//""*")([^(("*/"))])*("*/"))
 comentario={comentario_liea}|{comentario_multi}
-recordset = "$"{r}{e}{c}{o}{r}{d}{s}{e}{t}"["{tipo_string}"]"
+recordset = "$"{texto_basico}"["{tipo_string}"]"
+errorcomentario=("//""*")~(\n)
+errorex= ("=!=")
 %{
 public String lexeme;
 public int lineNumber = 1;
@@ -90,6 +92,10 @@ public int lineNumber = 1;
 {comentario} {lexeme=yytext();return COMENT;}
 {recordset} {lexeme=yytext(); return ORACLE;}
 {errorid} {lexeme=yytext(); return ERROR_ID;}
+{recordset} {lexeme=yytext(); return ORACLE;}
+{errorid} {lexeme=yytext(); return ERROR_ID;}
+{errorcomentario} {lexeme=yytext(); return ERROR_ID;}
+{errorex} {lexeme=yytext(); return ERROR_ID;}
 "<?php" {lexeme=yytext(); return ABRE_PHP;}
 "?>"    {lexeme=yytext(); return CIERRA_PHP;} 
 . {lexeme=yytext();return ERROR;}

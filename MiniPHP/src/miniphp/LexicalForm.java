@@ -179,8 +179,9 @@ public class LexicalForm extends javax.swing.JFrame {
                 listaeror+="TOKEN: "+token+" "+errores+" "+lexer.lineNumber+" "+lexer.lexeme+"'\r\n";
             }
             else if(token == Token.ORACLE){
-                 String aux= lexer.lexeme.substring(12, lexer.lexeme.length()-2);
-                 salida += "$recordset['"+aux.toUpperCase()+"']";
+                String[] bases=lexer.lexeme.split("'");
+                 
+                 salida += bases[0]+"'"+bases[1].toUpperCase()+"']";
                  consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
             }
             else if(token == Token.ESTRUC){
