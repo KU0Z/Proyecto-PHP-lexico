@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -31,7 +32,10 @@ public class LexicalForm extends javax.swing.JFrame {
     public LexicalForm() {
         
         initComponents();
+        jButton1.setEnabled(false);
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -72,7 +76,7 @@ public class LexicalForm extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Correr");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -84,21 +88,22 @@ public class LexicalForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(BTBuscar)
-                        .addGap(31, 31, 31)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 16, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(30, 30, 30)
+                            .addComponent(BTBuscar)
+                            .addGap(31, 31, 31)
+                            .addComponent(jButton1))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,11 +114,11 @@ public class LexicalForm extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -130,6 +135,7 @@ public class LexicalForm extends javax.swing.JFrame {
      {
         archivo = dialog.getSelectedFile();
         nuevaRuta = archivo.getPath();
+        jButton1.setEnabled(true);
      }
      return nuevaRuta;
     }
@@ -165,25 +171,61 @@ public class LexicalForm extends javax.swing.JFrame {
             else if(token == Token.ERROR){
                 errores++;
                 salida += lexer.lexeme;
-                listaeror+=token+" "+errores+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+                listaeror+="TOKEN: "+token+" "+errores+" "+lexer.lineNumber+" "+lexer.lexeme+"'\r\n";
+            }
+            else if(token == Token.ERROR_ID){
+                errores++;
+                salida += lexer.lexeme;
+                listaeror+="TOKEN: "+token+" "+errores+" "+lexer.lineNumber+" "+lexer.lexeme+"'\r\n";
+            }
+            else if(token == Token.ORACLE){
+                 String aux= lexer.lexeme.substring(12, lexer.lexeme.length()-2);
+                 salida += "$recordset['"+aux.toUpperCase()+"']";
+                 consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+            }
+            else if(token == Token.ESTRUC){
+                  salida += lexer.lexeme.toLowerCase();
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+            }
+            else if(token == Token.VARGLOBALM){
+                  salida += lexer.lexeme.toLowerCase();
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+            }
+            else if(token == Token.RESERWORD){
+                  salida += lexer.lexeme.toLowerCase();
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+            }
+            else if(token == Token.VARGLOBAL){
+                  salida += lexer.lexeme.toUpperCase();
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+            }
+            else if(token == Token.BOOL){
+                  salida += lexer.lexeme.toLowerCase();
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
             }
             else{
                 salida += lexer.lexeme;
-                consola+=token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
+                consola+="TOKEN: "+token+" "+lexer.lineNumber+" "+lexer.lexeme+"'\n";
 
            
             }
             
     }
+        String[] dire=ruta.split(".php");
         if(errores == 0){
-            File file = new File(ruta);         
-            
-            try (FileWriter fw = new FileWriter(file.getName()+".out")) {             
-                fw.write(TASalida.getText());
+            File file = new File(dire[0]+".out");         
+            try (FileWriter fw = new FileWriter(file.getPath())) {             
+                fw.write(salida);
                     fw.close();
+                    JOptionPane.showMessageDialog(this,"SE REAlIZO exitozamente el analisis ");
             }
         }
         else{
+            File file = new File(dire[0]+"Errors.txt");         
+            try (FileWriter fw = new FileWriter(file.getPath())) {             
+                fw.write(listaeror);
+                    fw.close();
+            }
             
         }
         TASalida.append(salida);
