@@ -52,6 +52,8 @@ variable_global = "$"({g}{l}{o}{b}{a}{l}{s}|"_"({s}{e}{r}{v}{e}{r}|{g}{e}{t}|{p}
 varialbe_goblalm= "$"({p}{h}{p}"_"{e}{r}{r}{o}{r}{m}{s}{g}|{h}{t}{t}{p}"_"{r}{e}{s}{p}{o}{n}{s}{e}"_"{h}{e}{a}{d}{e}{r}|{a}{r}{g}{c}|{a}{r}{g}{v})
 function = function
 comentario_liea = ("//"|"#")(.)*
-comentario_multi = (("/*")([^(("*/"))])*("*/"))
+comentario_multi = (("//""*")([^(("*/"))])*("*/"))
 comentario={comentario_liea}|{comentario_multi}
-recordset = "$"{r}{e}{c}{o}{r}{d}{s}{e}{t}"["{tipo_string}"]"
+recordset = "$"{texto_basico}"["{tipo_string}"]"
+errorcomentario=("//""*")~(\n)
+errorex= ("=!=")
