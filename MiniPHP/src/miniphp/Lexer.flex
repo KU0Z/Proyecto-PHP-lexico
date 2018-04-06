@@ -35,7 +35,7 @@ palabras_reservadas=(("_")("_"){h}{a}{l}{t}("_"){c}{o}{m}{p}{i}{l}{e}{r}|{a}{b}{
 Operadore_aritmeticos = "+"|"-"|"*"|"/"|"**"|"%"
 Operadore_comparacion = "=="|"!="|">"|"<"|"<="|"=>"|""
 Operadore_logicos ="&&"|"and"|"or"|"xor"|"||"|"!"
-Operadore_adicionales = "="|"+="|"-="|"*="|"/="|"++"|"--"
+Operadore_adicionales = "="|"+="|"-="|"*="|"/="|"++"|"--"|"."|":"
 Aberturas = "("|"{"|"["
 cierre = ")"|"}"|"]"
 puntocomma = ";"
@@ -45,10 +45,8 @@ decimal= [1-9][0-9]*|0
 hexadecimal=0[xX][0-9a-fA-F]+
 octal= 0[0-7]+
 binary= 0[bB][01]+
-tipo_entero = [+-]?decimal|[+-]?hexadecimal|[+-]?octal|[+-]?binary
-LNUM=[0-9]+
-DNUM=([0-9]*[\.]{LNUM}) | ({LNUM}[\.][0-9]*)
-tipo_real= [+-]?(({LNUM} | {DNUM}) [eE][+-]? {LNUM})
+tipo_entero = [+-]?{decimal}|[+-]?{hexadecimal}|[+-]?{octal}|[+-]?{binary}
+tipo_real = [-+]?[0-9]*\.?[0-9]+([eE]{tipo_entero}.?[0-9]*)?
 tipo_string = ('([^(')(\n)]|\\')*')|(\"([^(\")(\n)]|\\\")*\")
 idectificador= ("_"|{texto_basico})("_"|{texto_basico})*
 variables="$"{texto_basico}
@@ -63,10 +61,11 @@ comentario={comentario_liea}|{comentario_multi}
 recordset = "$"{r}{e}{c}{o}{r}{d}{s}{e}{t}"["{tipo_string}"]"
 %{
 public String lexeme;
+public int lineNumber = 1;
 %}
 %%
 [ \t\r]+ {lexeme=yytext(); return ESPACIO;}
-[\n]+    {lexeme=yytext(); return NUEVALINEA;}
+[\n]+    { lineNumber++;lexeme=yytext(); return NUEVALINEA;}
 {palabras_reservadas}   {lexeme=yytext(); return RESERWORD;}
 {Operadore_aritmeticos} {lexeme=yytext();return OPE_ARI;}
 {Operadore_comparacion} {lexeme=yytext();return OPE_COM;}
@@ -91,4 +90,4 @@ public String lexeme;
 {recordset} {lexeme=yytext(); return ORACLE;}
 "<?php" {lexeme=yytext(); return ABRE_PHP;}
 "?>"    {lexeme=yytext(); return CIERRA_PHP;} 
-. {return ERROR;}
+. {lexeme=yytext();return ERROR;}
