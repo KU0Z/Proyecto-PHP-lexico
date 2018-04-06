@@ -152,12 +152,17 @@ public class LexicalForm extends javax.swing.JFrame {
         Lexer lexer = new Lexer (reader);
         String consola="";
         String salida="";
+        int errores=0;
         while (true){
             Token token =lexer.yylex();
             if(token == null){
  
                 
                 break;
+            }
+            else if(token == Token.ERROR){
+                errores++;
+                consola+=token+" "+errores+"'\n";
             }
             else{
                 salida += lexer.lexeme;
