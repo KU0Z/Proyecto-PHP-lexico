@@ -19,7 +19,9 @@ public class MiniPHP {
      */
     public static void main(String[] args) throws IOException {
         String path =  "C:/Users/keviu/Documents/Ciclo 5/Lenguajes/Proyecto/Proyecto-PHP-lexico/MiniPHP/src/miniphp/Lexer.flex";
-        generarLexer(path);  
+        generarLexer(path);
+        LexicalForm formulario=new LexicalForm();
+        formulario.setVisible(true);
         
 
     }

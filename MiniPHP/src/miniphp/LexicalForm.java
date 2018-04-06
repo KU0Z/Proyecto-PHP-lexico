@@ -155,7 +155,7 @@ public class LexicalForm extends javax.swing.JFrame {
         while (true){
             Token token =lexer.yylex();
             if(token == null){
-                salida = salida+"EOF";
+ 
                 
                 break;
             }
